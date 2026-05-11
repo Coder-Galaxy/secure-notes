@@ -1,0 +1,49 @@
+---
+- name: Ensure docker network exists
+  docker_network:
+    name: devsecops-net
+
+- name: Start Elasticsearch
+  docker_container:
+    name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    state: started
+    ports:
+      - "9200:9200"
+    env:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    network_mode: devsecops-net
+
+- name: Wait for Elasticsearch to become ready
+  uri:
+    url: http://localhost:9200/_cat/health
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 30
+  delay: 10
+
+- name: Start Logstash
+  docker_container:
+    name: logstash
+    image: docker.elastic.co/logstash/logstash:8.10.0
+    state: started
+    ports:
+      - "5044:5044"
+    volumes:
+      - "{{ playbook_dir }}/../elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro"
+      - "{{ playbook_dir }}/../elk/logstash/pipeline:/usr/share/logstash/pipeline:ro"
+    network_mode: devsecops-net
+
+- name: Start Kibana
+  docker_container:
+    name: kibana
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    state: started
+    ports:
+      - "5601:5601"
+    env:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    network_mode: devsecops-net

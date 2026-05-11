@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trivy-scan
+spec:
+  template:
+    spec:
+      containers:
+      - name: trivy
+        image: aquasec/trivy:latest
+        command: ["trivy", "image", "--severity", "HIGH,CRITICAL", "mydockerhub/notes-api:latest"]
+      restartPolicy: Never
+  backoffLimit: 1

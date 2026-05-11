@@ -1,0 +1,25 @@
+---
+- name: Pull notes-api image
+  docker_image:
+    name: mydockerhub/notes-api
+    tag: "{{ image_tag | default('latest') }}"
+    source: pull
+
+- name: Stop existing notes-api container
+  docker_container:
+    name: notes-api-{{ env }}
+    state: absent
+
+- name: Start notes-api container
+  docker_container:
+    name: notes-api-{{ env }}
+    image: mydockerhub/notes-api:{{ image_tag | default('latest') }}
+    state: started
+    ports:
+      - "5000:5000"
+    env:
+      VAULT_ADDR: "http://vault:8200"
+      VAULT_TOKEN: "root"
+      AUTH_SERVICE_URL: "http://auth-service-{{ env }}:5001"
+      AUDIT_SERVICE_URL: "http://audit-service-{{ env }}:5002"
+    network_mode: devsecops-net

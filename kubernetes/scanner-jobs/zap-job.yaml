@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zap-scan
+spec:
+  template:
+    spec:
+      containers:
+      - name: zap
+        image: owasp/zap2docker-stable
+        command: ["zap-baseline.py", "-t", "http://notes-api:5000"]
+      restartPolicy: Never
+  backoffLimit: 1

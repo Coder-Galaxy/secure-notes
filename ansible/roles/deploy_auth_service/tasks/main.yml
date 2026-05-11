@@ -1,0 +1,23 @@
+---
+- name: Pull auth-service image
+  docker_image:
+    name: mydockerhub/auth-service
+    tag: "{{ image_tag | default('latest') }}"
+    source: pull
+
+- name: Stop existing auth-service container
+  docker_container:
+    name: auth-service-{{ env }}
+    state: absent
+
+- name: Start auth-service container
+  docker_container:
+    name: auth-service-{{ env }}
+    image: mydockerhub/auth-service:{{ image_tag | default('latest') }}
+    state: started
+    ports:
+      - "5001:5001"
+    env:
+      VAULT_ADDR: "http://vault:8200"
+      VAULT_TOKEN: "root"
+    network_mode: devsecops-net

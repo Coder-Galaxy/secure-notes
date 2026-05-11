@@ -1,0 +1,12 @@
+---
+- name: Deploy Secure Notes DevOps Project
+  hosts: all
+  become: yes
+  vars:
+    env: staging # Default to staging if not provided
+  roles:
+    - deploy_elk
+    - deploy_auth_service
+    - deploy_audit_service
+    - deploy_notes_api
+    - configure_scanners
