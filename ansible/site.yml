@@ -9,4 +9,3 @@
     - deploy_auth_service
     - deploy_audit_service
     - deploy_notes_api
-    - configure_scanners
