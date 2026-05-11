@@ -1,7 +1,7 @@
 ---
 - name: Deploy Secure Notes DevOps Project
   hosts: all
-  become: yes
+  become: no
   vars:
     env: staging # Default to staging if not provided
   roles:
