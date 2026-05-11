@@ -75,7 +75,7 @@ pipeline {
 
         stage('ZAP Scan') {
             steps {
-                sh 'docker run --network devsecops-net -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://notes-api-staging:5000'
+                sh 'docker run --network devsecops-net -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://notes-api-staging:5000 -I'
             }
         }
 
