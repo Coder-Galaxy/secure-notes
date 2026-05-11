@@ -8,6 +8,6 @@ spec:
       containers:
       - name: trivy
         image: aquasec/trivy:latest
-        command: ["trivy", "image", "--severity", "HIGH,CRITICAL", "mydockerhub/notes-api:latest"]
+        command: ["trivy", "image", "--severity", "HIGH,CRITICAL", "YOUR_DOCKERHUB_USERNAME/notes-api:latest"]
       restartPolicy: Never
   backoffLimit: 1

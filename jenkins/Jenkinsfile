@@ -52,24 +52,24 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t mydockerhub/auth-service:${IMAGE_TAG} services/auth-service'
-                sh 'docker build -t mydockerhub/notes-api:${IMAGE_TAG} services/notes-api'
-                sh 'docker build -t mydockerhub/audit-service:${IMAGE_TAG} services/audit-service'
+                sh 'docker build -t ${DOCKERHUB_CREDENTIALS_USR}/auth-service:${IMAGE_TAG} services/auth-service'
+                sh 'docker build -t ${DOCKERHUB_CREDENTIALS_USR}/notes-api:${IMAGE_TAG} services/notes-api'
+                sh 'docker build -t ${DOCKERHUB_CREDENTIALS_USR}/audit-service:${IMAGE_TAG} services/audit-service'
             }
         }
 
         stage('Docker Push') {
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push mydockerhub/auth-service:${IMAGE_TAG}'
-                sh 'docker push mydockerhub/notes-api:${IMAGE_TAG}'
-                sh 'docker push mydockerhub/audit-service:${IMAGE_TAG}'
+                sh 'docker push ${DOCKERHUB_CREDENTIALS_USR}/auth-service:${IMAGE_TAG}'
+                sh 'docker push ${DOCKERHUB_CREDENTIALS_USR}/notes-api:${IMAGE_TAG}'
+                sh 'docker push ${DOCKERHUB_CREDENTIALS_USR}/audit-service:${IMAGE_TAG}'
             }
         }
 
         stage('Deploy Staging') {
             steps {
-                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=staging -e image_tag=${IMAGE_TAG}'
+                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=staging -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR}'
             }
         }
 
@@ -81,7 +81,7 @@ pipeline {
 
         stage('Deploy Production') {
             steps {
-                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=production -e image_tag=${IMAGE_TAG}'
+                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=production -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR}'
             }
         }
     }

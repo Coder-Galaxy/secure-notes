@@ -1,7 +1,7 @@
 ---
 - name: Pull audit-service image
   docker_image:
-    name: mydockerhub/audit-service
+    name: {{ docker_user }}/audit-service
     tag: "{{ image_tag | default('latest') }}"
     source: pull
 
@@ -13,7 +13,7 @@
 - name: Start audit-service container
   docker_container:
     name: audit-service-{{ env }}
-    image: mydockerhub/audit-service:{{ image_tag | default('latest') }}
+    image: {{ docker_user }}/audit-service:{{ image_tag | default('latest') }}
     state: started
     ports:
       - "5002:5002"

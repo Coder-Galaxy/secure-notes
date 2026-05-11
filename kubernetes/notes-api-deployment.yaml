@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: notes-api
-        image: mydockerhub/notes-api:latest
+        image: YOUR_DOCKERHUB_USERNAME/notes-api:latest
         ports:
         - containerPort: 5000
         resources:

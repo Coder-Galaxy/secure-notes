@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: audit-service
-        image: mydockerhub/audit-service:latest
+        image: YOUR_DOCKERHUB_USERNAME/audit-service:latest
         ports:
         - containerPort: 5002
         resources:
