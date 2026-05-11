@@ -13,7 +13,7 @@ services:
       - IPC_LOCK
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -22,13 +22,13 @@ services:
     ports:
       - "9200:9200"
     healthcheck:
-      test: ["CMD", "curl", "-s", "-f", "http://localhost:9200/_cat/health"]
+      test: [ "CMD", "curl", "-s", "-f", "http://localhost:9200/_cat/health" ]
       interval: 10s
       timeout: 5s
       retries: 10
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.10.0
+    image: docker.elastic.co/logstash/logstash:8.12.0
     container_name: logstash
     volumes:
       - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -40,7 +40,7 @@ services:
         condition: service_healthy
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.10.0
+    image: docker.elastic.co/kibana/kibana:8.12.0
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
@@ -88,7 +88,7 @@ services:
     build: ./services/notes-api
     container_name: notes-api
     ports:
-      - "5000:5000"
+      - "5021:5000"
     environment:
       - VAULT_ADDR=http://vault:8200
       - VAULT_TOKEN=root
