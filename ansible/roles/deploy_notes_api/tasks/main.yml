@@ -1,7 +1,7 @@
 ---
 - name: Pull notes-api image
   docker_image:
-    name: {{ docker_user }}/notes-api
+    name: "{{ docker_user }}/notes-api"
     tag: "{{ image_tag | default('latest') }}"
     source: pull
 
@@ -13,7 +13,7 @@
 - name: Start notes-api container
   docker_container:
     name: notes-api-{{ env }}
-    image: {{ docker_user }}/notes-api:{{ image_tag | default('latest') }}
+    image: "{{ docker_user }}/notes-api:{{ image_tag | default('latest') }}"
     state: started
     ports:
       - "5000:5000"
