@@ -16,7 +16,7 @@
     image: "{{ docker_user }}/notes-api:{{ image_tag | default('latest') }}"
     state: started
     ports:
-      - "5000:5000"
+      - "{{ 5010 if env == 'staging' else 5020 }}:5000"
     env:
       VAULT_ADDR: "http://vault:8200"
       VAULT_TOKEN: "root"
