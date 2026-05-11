@@ -16,7 +16,7 @@
     image: "{{ docker_user }}/audit-service:{{ image_tag | default('latest') }}"
     state: started
     ports:
-      - "{{ 5012 if env == 'staging' else 5022 }}:5002"
+      - "{{ 5012 if env == 'staging' else 5032 }}:5002"
     env:
       VAULT_ADDR: "http://vault:8200"
       VAULT_TOKEN: "root"

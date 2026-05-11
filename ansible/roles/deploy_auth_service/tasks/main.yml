@@ -16,7 +16,7 @@
     image: "{{ docker_user }}/auth-service:{{ image_tag | default('latest') }}"
     state: started
     ports:
-      - "{{ 5011 if env == 'staging' else 5021 }}:5001"
+      - "{{ 5011 if env == 'staging' else 5031 }}:5001"
     env:
       VAULT_ADDR: "http://vault:8200"
       VAULT_TOKEN: "root"
