@@ -1,25 +1,5 @@
 ---
-- name: Pull notes-api image
-  docker_image:
-    name: "{{ docker_user }}/notes-api"
-    tag: "{{ image_tag | default('latest') }}"
-    source: pull
-
-- name: Stop existing notes-api container
-  docker_container:
-    name: notes-api-{{ env }}
-    state: absent
-
-- name: Start notes-api container
-  docker_container:
-    name: notes-api-{{ env }}
-    image: "{{ docker_user }}/notes-api:{{ image_tag | default('latest') }}"
-    state: started
-    ports:
-      - "{{ 5010 if env == 'staging' else 5030 }}:5000"
-    env:
-      VAULT_ADDR: "http://vault:8200"
-      VAULT_TOKEN: "root"
-      AUTH_SERVICE_URL: "http://auth-service-{{ env }}:5001"
-      AUDIT_SERVICE_URL: "http://audit-service-{{ env }}:5002"
-    network_mode: devsecops-net
+- name: Apply Notes API Kubernetes Manifests
+  kubernetes.core.k8s:
+    state: present
+    template: "{{ playbook_dir }}/k8s/notes-api.yml.j2"

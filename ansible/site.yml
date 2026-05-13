@@ -4,6 +4,8 @@
   become: no
   vars:
     env: staging # Default to staging if not provided
+  vars_files:
+    - secrets.yml
   roles:
     - deploy_elk
     - deploy_auth_service

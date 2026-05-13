@@ -69,19 +69,19 @@ pipeline {
 
         stage('Deploy Staging') {
             steps {
-                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=staging -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR}'
+                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=staging -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR} --vault-password-file ansible/.vault_pass'
             }
         }
 
         stage('ZAP Scan') {
             steps {
-                sh 'docker run --network devsecops-net -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://notes-api-staging:5000 -I'
+                sh 'docker run --network host -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:30010 -I'
             }
         }
 
         stage('Deploy Production') {
             steps {
-                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=production -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR}'
+                sh 'ansible-playbook -i ansible/inventory.ini ansible/site.yml -e env=production -e image_tag=${IMAGE_TAG} -e docker_user=${DOCKERHUB_CREDENTIALS_USR} --vault-password-file ansible/.vault_pass'
             }
         }
     }

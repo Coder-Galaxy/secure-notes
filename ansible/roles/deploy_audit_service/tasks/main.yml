@@ -1,24 +1,5 @@
 ---
-- name: Pull audit-service image
-  docker_image:
-    name: "{{ docker_user }}/audit-service"
-    tag: "{{ image_tag | default('latest') }}"
-    source: pull
-
-- name: Stop existing audit-service container
-  docker_container:
-    name: audit-service-{{ env }}
-    state: absent
-
-- name: Start audit-service container
-  docker_container:
-    name: audit-service-{{ env }}
-    image: "{{ docker_user }}/audit-service:{{ image_tag | default('latest') }}"
-    state: started
-    ports:
-      - "{{ 5012 if env == 'staging' else 5032 }}:5002"
-    env:
-      VAULT_ADDR: "http://vault:8200"
-      VAULT_TOKEN: "root"
-      ES_HOST: "http://elasticsearch:9200"
-    network_mode: devsecops-net
+- name: Apply Audit Service Kubernetes Manifests
+  kubernetes.core.k8s:
+    state: present
+    template: "{{ playbook_dir }}/k8s/audit-service.yml.j2"
